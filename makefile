@@ -9,3 +9,7 @@ taca:
 	gcc -o Taca taca.c -lglut  -lGL -lGLU -lm
 	./Taca
 
+garrafa: garrafa.c 
+	gcc -o Garrafa garrafa.c -lglut -lGL -lGLU -lm
+	./Garrafa
+

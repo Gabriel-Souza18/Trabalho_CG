@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <GL/glut.h>
 #define TACA 1
-#define PROJECAO 2 // pra mudar a projecao muda esse valor (1,2,3)
+#define PROJECAO 3 // pra mudar a projecao muda esse valor (1,2,3)
 
 
 void init(void){
@@ -75,7 +75,7 @@ void keyboard(unsigned char key, int x, int y){
         exit(0);
         break;
     }
-    }
+}
 
 int main(int argc, char **argv){
     glutInit(&argc, argv);
