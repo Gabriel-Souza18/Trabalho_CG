@@ -13,3 +13,7 @@ garrafa: garrafa.c
 	gcc -o Garrafa garrafa.c -lglut -lGL -lGLU -lm
 	./Garrafa
 
+cadeira: cadeira.c 
+	gcc -o Cadeira cadeira.c -lglut -lGL -lGLU -lm
+	./Cadeira
+
