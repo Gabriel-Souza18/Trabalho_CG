@@ -10,11 +10,87 @@
 #define LUMINARIA 6
 GLUquadricObj *qGarrafa;
 
-#define PROJECAO 3
+#define PROJECAO 1
+double angle, fAspect;
+float rotX, rotY, obsZ;
+int luz;
+
+void DefineIluminacao (void)
+{
+   //Define os parâmetros através de vetores RGBA - o último valor deve ser sempre 1.0f
+       float luzAmbiente[]={0.2f, 0.2f, 0.2f, 1.0f};
+       float luzDifusa[]={1.0f, 1.0f, 1.0f, 1.0f}; 
+       float luzEspecular[]={1.0f, 1.0f, 1.0f, 1.0f};
+       float posicaoLuz[]={0.0f, 30.0f, 0.0f, 1.0f}; // último parâmetro: 0-direcional, 1-pontual/posicional
+
+
+       //Ativa o uso da luz ambiente
+       glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbiente);
+
+
+       //Define os parâmetros da luz de número 0
+       glLightfv(GL_LIGHT0,GL_AMBIENT, luzAmbiente);
+       glLightfv(GL_LIGHT0,GL_DIFFUSE, luzDifusa );
+       glLightfv(GL_LIGHT0,GL_SPECULAR, luzEspecular);
+       glLightfv(GL_LIGHT0,GL_POSITION, posicaoLuz ); 
+      
+      
+       // Brilho do material
+       float especularidade[]={1.0f, 1.0f, 1.0f, 1.0f};
+       int especMaterial = 60;
+
+
+       // Define a reflectância do material
+       glMaterialfv(GL_FRONT, GL_SPECULAR, especularidade);
+       // Define a concentração do brilho
+       glMateriali(GL_FRONT, GL_SHININESS, especMaterial);
+}
+// Função usada para especificar a posição do observador virtual
+void PosicionaObservador(void)
+{
+   // Especifica sistema de coordenadas do modelo
+   glMatrixMode(GL_MODELVIEW);
+   // Inicializa sistema de coordenadas do modelo
+   glLoadIdentity();
+   // Especifica posição do observador e do alvo
+   glTranslatef(0,0,-obsZ);
+   glRotatef(rotX,1,0,0);
+   glRotatef(rotY,0,1,0);
+}
+void EspecificaParametrosVisualizacao(void)
+{
+   // Especifica sistema de coordenadas de projeção
+   glMatrixMode(GL_PROJECTION);
+   // Inicializa sistema de coordenadas de projeção
+   glLoadIdentity();
+   // Especifica a projeção perspectiva(angulo,aspecto,zMin,zMax)
+   gluPerspective(angle, fAspect, 0.2, 500);
+
+
+   PosicionaObservador();
+}
+
 
 void init(void){
     glClearColor(0.0, 0.0, 0.0, 0.0);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glClearColor(1.0, 1.0, 1.0, 0.0);
+    glEnable(GL_DEPTH_TEST); // Habilita o teste de profundidade
+    glEnable(GL_LIGHTING); // Habilita a iluminação
+    glEnable(GL_LIGHT0); // Habilita a luz 0
+    glEnable(GL_COLOR_MATERIAL);
+
+
+
+   // Especifica o ângulo da projeção perspectiva 
+    angle=50;  
+       // Inicializa o valor para correção de aspecto  
+    fAspect = 1;
+
+    rotX = 0;
+    rotY = 0;
+    obsZ = 50;
+    luz =1;
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 // Inicializa as display lists
     glNewList(CHAO, GL_COMPILE); // Chao
 {// modelando mesa
@@ -41,104 +117,106 @@ void init(void){
 
     glNewList(MESA, GL_COMPILE); // Mesa
 { // Modelando mesa
+    glColor3d(0.5,0.5,0);
         //Tampo da mesa
         glPushMatrix();
             glTranslated(0,7,0);
             glScaled(50,2,50);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
         
         //pe da mesa 1
         glPushMatrix();
             glTranslated(20,-8,20);
             glScaled(2,30,2);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
 
         //pe da mesa 2
         glPushMatrix();
             glTranslated(-20,-8,20);
             glScaled(2,30,2);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
 
          //pe da mesa 3
         glPushMatrix();
             glTranslated(20,-8,-20);
             glScaled(2,30,2);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
 
         //pe da mesa 4
         glPushMatrix();
             glTranslated(-20,-8,-20);
             glScaled(2,30,2);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
 }
     glEndList();
 
 
     glNewList(CADEIRA, GL_COMPILE); // Cadeira
+    glColor3d(0,0.2,0.7);
 { // Modelando cadeira
         //pe da cadeira 1
         glPushMatrix();
             glTranslated(0, 0, 0);
             glScaled(1,15,1);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
 
         //pe da cadeira 2
         glPushMatrix();
             glTranslated(10, 7.5, 0);
             glScaled(1,30,1);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
 
          //pe da cadeira 3
         glPushMatrix();
             glTranslated(10, 7.5, 10);
             glScaled(1,30,1);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
 
         //pe da cadeira 4
         glPushMatrix();
             glTranslated(0, 0, 10);
             glScaled(1,15,1);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
 
         // ligacao dos bancos na parte de cima
         glPushMatrix();
             glTranslated(10, 20, 5);
             glScaled(1,1,11);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
 
         //banco da cadeira
         glPushMatrix();
             glTranslated(5, 8, 0);
             glScaled(11,1,1);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
 
         glPushMatrix();
             glTranslated(5, 8, 10);
             glScaled(11,1,1);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
 
         glPushMatrix();
             glTranslated(0, 8, 5);
             glScaled(1,1,11);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
 
         glPushMatrix();
             glTranslated(10, 8, 5);
             glScaled(1,1,11);
-            glutWireCube(1.0);
+            glutSolidCube(1.0);
         glPopMatrix();
 
         glTranslated(5, 8, 5); // Centralize a posição do banco
@@ -170,6 +248,7 @@ void init(void){
 
 
     glNewList(TACA, GL_COMPILE); // Taca
+    glColor3d(0.3,0.0,0.2);
 {// Modelando Taca
     //parte de cima da taca
     glPushMatrix();
@@ -195,6 +274,7 @@ void init(void){
 
 
     glNewList(GARRAFA, GL_COMPILE); // GARRAFA
+    glColor3d(1,0,0);
 {// Modelando garrafa
         // pe da garrafa
         glPushMatrix();
@@ -229,14 +309,15 @@ void init(void){
         glPushMatrix();
             glTranslated(0, 10,0);
             glRotated(90.0, 1, 0,0);
-            glutWireTorus(1.0, 1.1, 20, 20);
+            glutSolidTorus(1.0, 1.1, 20, 20);
         glPopMatrix();
 
     glEndList();
 }
 
     glNewList(LUMINARIA, GL_COMPILE); // Luminaria
-{
+    glColor3d(0.1,0.1,0.1);
+{//modelando luminaria
         GLUquadric* q  = gluNewQuadric();
         glPushMatrix(); //Pe da luminaria
             glTranslated(0, -20, 0);
@@ -280,10 +361,14 @@ void init(void){
 }
     glEndList();
 }
+
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1.0, 1.0, 1.0);
     glLoadIdentity();
+
+    EspecificaParametrosVisualizacao();
+    DefineIluminacao();
  // Chama o display list do chao para exibi-lo
     
     glPushMatrix();
@@ -291,11 +376,9 @@ void display(void){
         glTranslated(0,-16,0);
         glCallList(CHAO);
     glPopMatrix();
-
- // término do posicionamento do chão
- // Chama o display list da mesa para exibi-la
+EspecificaParametrosVisualizacao();
     glPushMatrix();
-        glScaled(0.6,0.7,0.6);
+        glScaled(0.6,0.7,0.7);
         glCallList(MESA);
     glPopMatrix();
  // término do posicionamento da mesa
@@ -343,24 +426,13 @@ void display(void){
 
     glutSwapBuffers();
 }
+
 void reshape(int w, int h){
     glViewport(0, 0, (GLsizei)w, (GLsizei)h);
     glMatrixMode(GL_PROJECTION);
-    if(PROJECAO == 1){
-        //projeção perspectiva
-        gluPerspective(60.0, (GLfloat)w/(GLfloat)h, 1.0, 100.0);
-        gluLookAt(-10.0, 30.0, 50.0,0.0, -2.0, 0.0, 0.0, 1.0, 0.0);
-    }else if(PROJECAO == 2){
-        //projeção ortográfica - vista de cima
-        glOrtho(-30.0,30.0, -30.0,30.0, 1.0,250.0);
-        gluLookAt(0.0, 100.0, 30.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    }else if(PROJECAO == 3){
-         //projeção ortográfica - vista frontal
-        glOrtho(-30.0,30.0, -30.0,30.0, 1.0,250.0);
-        gluLookAt(0.0, 0.0, 30.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    }
     glMatrixMode(GL_MODELVIEW);
 }
+
 void keyboard(unsigned char key, int x, int y){
     switch(key) {
         case 27:
@@ -369,6 +441,52 @@ void keyboard(unsigned char key, int x, int y){
         break;
     }
 }
+void GerenciaMouse(int button, int state, int x, int y)
+{
+   if (button == GLUT_LEFT_BUTTON)
+       if (state == GLUT_DOWN) {  // Zoom-in
+           if (angle >= 40) angle -= 4;
+       }
+   if (button == GLUT_RIGHT_BUTTON)
+       if (state == GLUT_DOWN) {  // Zoom-out
+           if (angle <= 72) angle += 4;
+       }
+   EspecificaParametrosVisualizacao();
+   glutPostRedisplay();
+}
+
+
+void TeclasEspeciais(int key, int x, int y)
+{
+   switch (key)
+   {
+       case GLUT_KEY_LEFT:rotY--;
+               break;
+       case GLUT_KEY_RIGHT:rotY++;
+               break;
+       case GLUT_KEY_UP:rotX++;
+               break;
+       case GLUT_KEY_DOWN:rotX--;
+               break;
+       case GLUT_KEY_HOME:obsZ++;
+               break;
+       case GLUT_KEY_END:obsZ--;
+               break;
+       case GLUT_KEY_F1: if (luz) luz = 0;
+       else luz = 1;
+       break;     
+       case GLUT_KEY_F10:// "camera reset"
+               rotX=0;
+               rotY=0;
+               obsZ=200;
+               angle=50;
+               EspecificaParametrosVisualizacao();
+               break;
+   }
+   PosicionaObservador();
+   glutPostRedisplay();
+}
+
 int main(int argc, char **argv){
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -379,6 +497,8 @@ int main(int argc, char **argv){
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutKeyboardFunc(keyboard);
+    glutMouseFunc(GerenciaMouse);
+    glutSpecialFunc(TeclasEspeciais);
     glutMainLoop();
     return 0;
 }
