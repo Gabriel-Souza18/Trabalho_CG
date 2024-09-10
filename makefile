@@ -4,6 +4,7 @@ tudo:
 	make garrafa
 	make cadeira
 	make luminaria
+	make main
 
 main:
 	gcc -o Main main.c -lglut  -lGL -lGLU -lm
@@ -31,3 +32,6 @@ cadeira: cadeira.c
 luminaria: luminaria.c 
 		gcc -o Luminaria luminaria.c -lglut -lGL -lGLU -lm
 	./Luminaria
+
+clear: 
+	rm Cadeira Garrafa Luminaria Main Mesa Taca

@@ -219,30 +219,19 @@ void init(void){
             glutSolidCube(1.0);
         glPopMatrix();
 
-        glTranslated(5, 8, 5); // Centralize a posição do banco
+        // Banco
+        glPushMatrix();
+            glTranslated(5, 8, 5);
+            glScaled(11,1,11);
+            glutSolidCube(1.0);
+        glPopMatrix();
 
-        glBegin(GL_TRIANGLE_STRIP); // Desenhando linhas no banco
-            // Especifica os quatro vértices do retângulo que forma o banco
-            glVertex3f(-5.0, 0.0, -5.0); // Vértice inferior esquerdo
-            glVertex3f( 5.0, 0.0, -5.0); // Vértice inferior direito
-
-            glVertex3f( 0.0, 0.0, 0.0);
-
-            glVertex3f(-5.0, 0.0,  5.0); // Vértice superior esquerdo
-            glVertex3f( 5.0, 0.0,  5.0); // Vértice superior direito
-        glEnd();
-
-        glTranslated(5, 2, 0); // Ajuste a posição conforme necessário
-        glRotatef(-90.0, 0.0, 1.0, 0.0);
-        glBegin(GL_TRIANGLE_STRIP);
-            glVertex3f(-5.0,  0.0, 0.0);  // Vértice inferior esquerdo
-            glVertex3f( 5.0,  0.0, 0.0);  // Vértice inferior direito
-
-            glVertex3f( 0.0, 5.0, 0.0);
-
-            glVertex3f(-5.0, 10.0, 0.0);  // Vértice superior esquerdo
-            glVertex3f( 5.0, 10.0, 0.0);  // Vértice superior direito
-        glEnd();
+        // Encosto
+        glPushMatrix();
+            glTranslated(10, 15, 5);
+            glScaled(1,11,11);
+            glutSolidCube(1.0);
+        glPopMatrix();
 }
     glEndList();
 
@@ -362,27 +351,31 @@ void init(void){
     glEndList();
 }
 
-void display(void){
-    glClear(GL_COLOR_BUFFER_BIT);
+void display(void) {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Limpa o buffer de cor e profundidade
     glColor3f(1.0, 1.0, 1.0);
     glLoadIdentity();
 
     EspecificaParametrosVisualizacao();
     DefineIluminacao();
- // Chama o display list do chao para exibi-lo
+
+    // Chama o display list do chao para exibi-lo
     
     glPushMatrix();
         glScaled(1.5,1,1.5);
         glTranslated(0,-16,0);
         glCallList(CHAO);
     glPopMatrix();
-EspecificaParametrosVisualizacao();
-    glPushMatrix();
+
+
+    EspecificaParametrosVisualizacao();
+        glPushMatrix();
         glScaled(0.6,0.7,0.7);
         glCallList(MESA);
     glPopMatrix();
- // término do posicionamento da mesa
- // Chama o display list da cadeira 1 para exibi-lo
+    
+    // término do posicionamento da mesa
+    // Chama o display list da cadeira 1 para exibi-lo
     glPushMatrix();
         glRotated(20,0,1,0);
         glTranslated(15,-9,0);
@@ -489,7 +482,7 @@ void TeclasEspeciais(int key, int x, int y)
 
 int main(int argc, char **argv){
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(400, 300);
     glutInitWindowPosition(100, 100);
     glutCreateWindow("cena");

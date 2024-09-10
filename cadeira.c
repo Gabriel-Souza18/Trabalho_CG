@@ -76,30 +76,20 @@ void init(void)
             glutWireCube(1.0);
         glPopMatrix();
 
-        glTranslated(5, 8, 5); // Centralize a posição do banco
+        // Banco
+        glPushMatrix();
+            glTranslated(5, 8, 5);
+            glScaled(11,1,11);
+            glutWireCube(1.0);
+        glPopMatrix();
 
-        glBegin(GL_TRIANGLE_STRIP); // Desenhando linhas no banco
-            // Especifica os quatro vértices do retângulo que forma o banco
-            glVertex3f(-5.0, 0.0, -5.0); // Vértice inferior esquerdo
-            glVertex3f( 5.0, 0.0, -5.0); // Vértice inferior direito
+        // Encosto
+        glPushMatrix();
+            glTranslated(10, 15, 5);
+            glScaled(1,11,11);
+            glutWireCube(1.0);
+        glPopMatrix();
 
-            glVertex3f( 0.0, 0.0, 0.0);
-
-            glVertex3f(-5.0, 0.0,  5.0); // Vértice superior esquerdo
-            glVertex3f( 5.0, 0.0,  5.0); // Vértice superior direito
-        glEnd();
-
-        glTranslated(5, 2, 0); // Ajuste a posição conforme necessário
-        glRotatef(-90.0, 0.0, 1.0, 0.0);
-        glBegin(GL_TRIANGLE_STRIP);
-            glVertex3f(-5.0,  0.0, 0.0);  // Vértice inferior esquerdo
-            glVertex3f( 5.0,  0.0, 0.0);  // Vértice inferior direito
-
-            glVertex3f( 0.0, 5.0, 0.0);
-
-            glVertex3f(-5.0, 10.0, 0.0);  // Vértice superior esquerdo
-            glVertex3f( 5.0, 10.0, 0.0);  // Vértice superior direito
-        glEnd();
 
     glEndList();
 }
